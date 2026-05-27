@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="content">
+
+    <div class="card text-center mb-4 theme-card">
+        <div class="card-header theme-card-header">
+            <h1>ИГРЫ</h1>
+        </div>
+    </div>
+
+    <div th:if="${videos.isEmpty()}" class="alert alert-info text-center">
+        <h4>Видео пока нет</h4>
+        <p>Следите за обновлениями!</p>
+    </div>
+
+    <div th:each="video, stat : ${videos}" class="video-card">
+        <div class="video-card-body">
+
+            <!-- Заголовок -->
+            <div class="video-header">
+                <h2 th:text="${video.title}">Заголовок видео</h2>
+            </div>
+
+            <!-- Видео -->
+            <div th:if="${video.videoUrl != null}" class="video-container text-center mb-3">
+                <video controls>
+                    <source th:src="${video.videoUrl}" type="video/mp4">
+                    Ваш браузер не поддерживает видео.
+                </video>
+            </div>
+
+            <!-- Изображение, видео -->
+            <div th:if="${video.imageUrl != null}" class="image-container text-center mb-3">
+                <img th:src="${video.imageUrl}" alt="Обложка видео">
+            </div>
+
+            <!-- Кликабельная строка -->
+            <div th:if="${video.content != null and !video.content.isEmpty()}">
+                <div class="expand-trigger"
+                     data-bs-toggle="collapse"
+                     th:data-bs-target="'#collapseText' + ${stat.index}"
+                     aria-expanded="false">
+                    <span class="expand-icon">▼</span>
+                </div>
+
+                <!-- Скрытый текст -->
+                <div th:id="'collapseText' + ${stat.index}" class="collapse">
+                    <div class="video-text">
+                        <span th:text="${video.content}">Текст видео</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <style>
+        /* Общие стили */
+        .video-card {
+            border: none;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+        }
+        .video-card-body {
+            padding: 25px;
+        }
+        .video-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .video-header h2 {
+            margin: 0;
+            color: #111;
+        }
+        .video-container video {
+            max-width: 100%;
+            max-height: 400px;
+        }
+        .image-container img {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 10px;
+            object-fit: contain;
+        }
+        .expand-trigger {
+            text-align: center;
+            padding: 8px 0;
+            cursor: pointer;
+            border-top: 1px solid #ddd;
+            margin-top: 10px;
+        }
+        .expand-trigger:hover {
+            background-color: #f0f0f0;
+            transition: 0.2s;
+        }
+        .video-text {
+            white-space: pre-line;
+            line-height: 1.6;
+            color: #333;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+        .theme-card {
+            border: none;
+            background-color: #111;
+        }
+        .theme-card-header {
+            background-color: #FFD700;
+            color: #111;
+        }
+        /* Переопределение для бело-чёрной темы */
+        .theme-override .theme-card-header,
+        body[data-theme="white-black"] .theme-card-header,
+        body[data-theme="black-white"] .theme-card-header {
+            background-color: #111 !important;
+            color: #fff !important;
+        }
+        .theme-override .expand-trigger:hover,
+        body[data-theme="white-black"] .expand-trigger:hover,
+        body[data-theme="black-white"] .expand-trigger:hover {
+            background-color: #e0e0e0;
+        }
+        .theme-override .video-text,
+        body[data-theme="white-black"] .video-text,
+        body[data-theme="black-white"] .video-text {
+            background-color: #e9ecef;
+            color: #111;
+        }
+    </style>
+
+    <script>
+        document.querySelectorAll('.expand-trigger').forEach(function(trigger) {
+            trigger.addEventListener('click', function() {
+                var icon = this.querySelector('.expand-icon');
+                var isExpanded = this.getAttribute('aria-expanded') === 'true';
+                icon.innerHTML = isExpanded ? '▼' : '▲';
+            });
+        });
+    </script>
+
+</div>
+</body>
+</html>

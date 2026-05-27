@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        .preview-img, .preview-video {
+            max-width: 200px;
+            max-height: 150px;
+            margin-top: 10px;
+            border-radius: 8px;
+        }
+        .is-invalid {
+            border-color: #dc3545 !important;
+            background-image: none !important;
+        }
+        .invalid-feedback {
+            display: block !important;
+        }
+    </style>
+</head>
+<body>
+<div th:fragment="content">
+    <div class="container mt-4">
+        <h2 th:if="${post.id == null}">Новый пост</h2>
+        <h2 th:if="${post.id != null}">Редактирование поста</h2>
+
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+        <form method="post" th:action="@{/admin/posts/save}" enctype="multipart/form-data" novalidate>
+            <input type="hidden" name="id" th:value="${post.id}">
+            <!-- Сохраняем пути -->
+            <input type="hidden" name="imageUrl" th:value="${post.imageUrl}">
+            <input type="hidden" name="videoUrl" th:value="${post.videoUrl}">
+            <input type="hidden" name="category" th:value="${post.category}">
+            <!-- Заголовок -->
+            <div class="mb-3">
+                <label>Заголовок *</label>
+                <input type="text" name="title" class="form-control" th:value="${post.title}" required>
+                <div class="invalid-feedback">Заголовок обязателен</div>
+            </div>
+            <!-- Текст -->
+            <div class="mb-3">
+                <label>Текст</label>
+                <textarea name="content" class="form-control" rows="6" th:text="${post.content}"></textarea>
+            </div>
+
+            <!-- Изображение -->
+            <div class="mb-3">
+                <label>Изображение</label>
+                <input type="file" name="imageFile" class="form-control" accept="image/*" id="imageFile">
+                <div th:if="${post.imageUrl}" class="mt-2">
+                    <img th:src="${post.imageUrl}" class="preview-img" alt="Текущее изображение">
+                    <div class="form-text">Текущее изображение. Загрузите новый файл для замены.</div>
+                </div>
+            </div>
+
+            <!-- Видео -->
+            <div class="mb-3">
+                <label>Видео (MP4, AVI, MOV)</label>
+                <input type="file" name="videoFile" class="form-control" accept="video/*" id="videoFile">
+                <div th:if="${post.videoUrl}" class="mt-2">
+                    <video controls class="preview-video">
+                        <source th:src="${post.videoUrl}" type="video/mp4">
+                        Ваш браузер не поддерживает видео.
+                    </video>
+                    <div class="form-text">Текущее видео. Загрузите новый файл для замены.</div>
+                </div>
+            </div>
+
+            <!-- Порядок отображения -->
+            <div th:if="${post.category == 'history'}" class="mb-3">
+                <label>Порядок отображения (число, чем меньше, тем выше)</label>
+                <input type="number" name="displayOrder" class="form-control" th:value="${post.displayOrder}" min="1">
+                <div class="form-text">Если не заполнить, будет добавлен в конец списка.</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <a th:href="@{/admin/posts/news}" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+
+    <script>
+        const imageInput = document.getElementById('imageFile');
+        const videoInput = document.getElementById('videoFile');
+
+        if (imageInput && videoInput) {
+            imageInput.addEventListener('change', () => {
+                if (imageInput.files.length > 0) {
+                    videoInput.value = '';
+                }
+            });
+            videoInput.addEventListener('change', () => {
+                if (videoInput.files.length > 0) {
+                    imageInput.value = '';
+                }
+            });
+        }
+    </script>
+</div>
+</body>
+</html>

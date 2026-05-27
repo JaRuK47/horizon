@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="content">
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Игроки -->
+            <div class="col-md-4 mb-3">
+                <div class="card text-white bg-dark h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Игроки</h5>
+                        <p class="card-text display-4" th:text="${playersCount}">0</p>
+                        <a href="/admin/players" class="btn btn-warning">Управление</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Новости -->
+            <div class="col-md-4 mb-3">
+                <div class="card text-white bg-dark h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Новости</h5>
+                        <p class="card-text display-4" th:text="${newsCount}">0</p>
+                        <a href="/admin/posts/news" class="btn btn-warning">Управление новостями</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Видео -->
+            <div class="col-md-4 mb-3">
+                <div class="card text-white bg-dark h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Видео</h5>
+                        <p class="card-text display-4" th:text="${videosCount}">0</p>
+                        <a href="/admin/posts/video" class="btn btn-warning">Управление видео</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <!-- История -->
+            <div class="col-md-4 mb-3">
+                <div class="card text-white bg-dark h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">История команды</h5>
+                        <p class="card-text display-4" th:text="${historyCount}">0</p>
+                        <a href="/admin/posts/history" class="btn btn-warning">Управление историей</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

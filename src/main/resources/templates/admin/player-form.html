@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        .is-invalid {
+            border-color: #dc3545 !important;
+            background-image: none !important;
+        }
+        .invalid-feedback {
+            display: block !important;
+        }
+    </style>
+</head>
+<body>
+<div th:fragment="content">
+    <div class="container mt-4">
+        <h2 th:if="${player.id == null}">Новый игрок</h2>
+        <h2 th:if="${player.id != null}">Редактирование игрока</h2>
+
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+        <form method="post" th:action="@{/admin/players/save}" enctype="multipart/form-data" novalidate>
+            <input type="hidden" name="id" th:value="${player.id}">
+            <input type="hidden" name="photoYellow" th:value="${player.photoYellow}">
+            <input type="hidden" name="photoWhiteBlack" th:value="${player.photoWhiteBlack}">
+            <input type="hidden" name="photoBlackWhite" th:value="${player.photoBlackWhite}">
+
+            <!-- Имя -->
+            <div class="mb-3">
+                <label>Имя *</label>
+                <input type="text" name="firstName" class="form-control" th:value="${player.firstName}" required
+                       th:classappend="${fieldErrors != null and fieldErrors.containsKey('firstName')} ? 'is-invalid' : ''">
+                <div th:if="${fieldErrors != null and fieldErrors.containsKey('firstName')}" class="invalid-feedback" th:text="${fieldErrors['firstName']}"></div>
+            </div>
+            <!-- Фамилия -->
+            <div class="mb-3">
+                <label>Фамилия *</label>
+                <input type="text" name="lastName" class="form-control" th:value="${player.lastName}" required
+                       th:classappend="${fieldErrors != null and fieldErrors.containsKey('lastName')} ? 'is-invalid' : ''">
+                <div th:if="${fieldErrors != null and fieldErrors.containsKey('lastName')}" class="invalid-feedback" th:text="${fieldErrors['lastName']}"></div>
+            </div>
+            <!-- Номер -->
+            <div class="mb-3">
+                <label>Номер (0-999) *</label>
+                <input type="number" name="number" class="form-control" th:value="${player.number}" min="0" max="999" required
+                       th:classappend="${fieldErrors != null and fieldErrors.containsKey('number')} ? 'is-invalid' : ''">
+                <div th:if="${fieldErrors != null and fieldErrors.containsKey('number')}" class="invalid-feedback" th:text="${fieldErrors['number']}"></div>
+            </div>
+            <!-- Позиция -->
+            <div class="mb-3">
+                <label>Позиция *</label>
+                <select name="position" class="form-select"
+                        th:classappend="${fieldErrors != null and fieldErrors.containsKey('position')} ? 'is-invalid' : ''">
+                    <option value="Вратарь" th:selected="${player.position == 'Вратарь'}">Вратарь</option>
+                    <option value="Полевой" th:selected="${player.position == 'Полевой'}">Полевой</option>
+                </select>
+                <div th:if="${fieldErrors != null and fieldErrors.containsKey('position')}" class="invalid-feedback" th:text="${fieldErrors['position']}"></div>
+            </div>
+            <!-- Состав -->
+            <div class="mb-3">
+                <label>Состав *</label>
+                <select name="teamType" class="form-select"
+                        th:classappend="${fieldErrors != null and fieldErrors.containsKey('teamType')} ? 'is-invalid' : ''">
+                    <option value="1" th:selected="${player.teamType == 1}">1 состав</option>
+                    <option value="2" th:selected="${player.teamType == 2}">2 состав</option>
+                </select>
+                <div th:if="${fieldErrors != null and fieldErrors.containsKey('teamType')}" class="invalid-feedback" th:text="${fieldErrors['teamType']}"></div>
+            </div>
+            <!-- Дата -->
+            <div class="mb-3">
+                <label>Дата рождения (ДД.ММ.ГГГГ) *</label>
+                <input type="text" name="birthDate" class="form-control" th:value="${player.birthDate}" placeholder="01.01.2000" required
+                       th:classappend="${fieldErrors != null and fieldErrors.containsKey('birthDate')} ? 'is-invalid' : ''">
+                <div th:if="${fieldErrors != null and fieldErrors.containsKey('birthDate')}" class="invalid-feedback" th:text="${fieldErrors['birthDate']}"></div>
+            </div>
+
+            <div class="row">
+                <!-- Голы -->
+                <div class="col-md-3 mb-3">
+                    <label>Голы</label>
+                    <input type="number" name="goals" class="form-control" th:value="${player.goals}" min="0"
+                           th:classappend="${fieldErrors != null and fieldErrors.containsKey('goals')} ? 'is-invalid' : ''">
+                    <div th:if="${fieldErrors != null and fieldErrors.containsKey('goals')}" class="invalid-feedback" th:text="${fieldErrors['goals']}"></div>
+                </div>
+                <!-- Ассисты -->
+                <div class="col-md-3 mb-3">
+                    <label>Ассисты</label>
+                    <input type="number" name="assists" class="form-control" th:value="${player.assists}" min="0"
+                           th:classappend="${fieldErrors != null and fieldErrors.containsKey('assists')} ? 'is-invalid' : ''">
+                    <div th:if="${fieldErrors != null and fieldErrors.containsKey('assists')}" class="invalid-feedback" th:text="${fieldErrors['assists']}"></div>
+                </div>
+                <!-- Матчи -->
+                <div class="col-md-3 mb-3">
+                    <label>Сыграно матчей</label>
+                    <input type="number" name="games" class="form-control" th:value="${player.games}" min="0"
+                           th:classappend="${fieldErrors != null and fieldErrors.containsKey('games')} ? 'is-invalid' : ''">
+                    <div th:if="${fieldErrors != null and fieldErrors.containsKey('games')}" class="invalid-feedback" th:text="${fieldErrors['games']}"></div>
+                </div>
+                <!-- Желтые -->
+                <div class="col-md-3 mb-3">
+                    <label>Жёлтые карточки</label>
+                    <input type="number" name="yellowCards" class="form-control" th:value="${player.yellowCards}" min="0"
+                           th:classappend="${fieldErrors != null and fieldErrors.containsKey('yellowCards')} ? 'is-invalid' : ''">
+                    <div th:if="${fieldErrors != null and fieldErrors.containsKey('yellowCards')}" class="invalid-feedback" th:text="${fieldErrors['yellowCards']}"></div>
+                </div>
+                <!-- Красные -->
+                <div class="col-md-3 mb-3">
+                    <label>Красные карточки</label>
+                    <input type="number" name="redCards" class="form-control" th:value="${player.redCards}" min="0"
+                           th:classappend="${fieldErrors != null and fieldErrors.containsKey('redCards')} ? 'is-invalid' : ''">
+                    <div th:if="${fieldErrors != null and fieldErrors.containsKey('redCards')}" class="invalid-feedback" th:text="${fieldErrors['redCards']}"></div>
+                </div>
+            </div>
+            <!-- Биография -->
+            <div class="mb-3">
+                <label>Описание (биография)</label>
+                <textarea name="content" class="form-control" rows="4"
+                          th:classappend="${fieldErrors != null and fieldErrors.containsKey('content')} ? 'is-invalid' : ''"
+                          th:text="${player.content}"></textarea>
+                <div th:if="${fieldErrors != null and fieldErrors.containsKey('content')}" class="invalid-feedback" th:text="${fieldErrors['content']}"></div>
+            </div>
+            <!-- Желточерная форма -->
+            <div class="mb-3">
+                <label>Фото (жёлто-чёрная форма)</label>
+                <input type="file" name="photoYellowFile" class="form-control" accept="image/*">
+                <div th:if="${player.photoYellow}" class="mt-2">
+                    <img th:src="${player.photoYellow}" style="height: 80px;">
+                </div>
+            </div>
+            <div class="mb-3">
+                <label>Фото (бело-чёрная форма)</label>
+                <input type="file" name="photoWhiteBlackFile" class="form-control" accept="image/*">
+                <div th:if="${player.photoWhiteBlack}" class="mt-2">
+                    <img th:src="${player.photoWhiteBlack}" style="height: 80px;">
+                </div>
+            </div>
+            <div class="mb-3">
+                <label>Фото (черно-белая форма)</label>
+                <input type="file" name="photoBlackWhiteFile" class="form-control" accept="image/*">
+                <div th:if="${player.photoBlackWhite}" class="mt-2">
+                    <img th:src="${player.photoBlackWhite}" style="height: 80px;">
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <a href="/admin/players" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+</div>
+</body>
+</html>

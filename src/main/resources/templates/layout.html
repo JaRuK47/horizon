@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Горизонт</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/5.3.2/css/bootstrap.min.css">
+    <style>
+        /* ---- Базовые стили ---- */
+        body {
+            background-color: #f5f5f5;
+            color: #111;
+            padding-top: 140px;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        body[data-theme="yellow-black"] {
+            background-color: #f5f5f5;
+            color: #111;
+        }
+        body[data-theme="yellow-black"] .navbar-custom {
+            background-color: #fff !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        body[data-theme="yellow-black"] .team-btn-active {
+            background-color: #FFD700 !important;
+            color: #111 !important;
+            border: 2px solid #000;
+        }
+        body[data-theme="yellow-black"] .offcanvas .offcanvas-title {
+            color: #FFD700;
+        }
+        body[data-theme="yellow-black"] footer h5 {
+            color: #FFD700;
+        }
+        body[data-theme="yellow-black"] footer a:hover {
+            color: #FFD700;
+        }
+
+        /* Бело-чёрная тема */
+        body[data-theme="white-black"],
+        body[data-theme="black-white"] {
+            background-color: #fff;
+            color: #111;
+        }
+        body[data-theme="white-black"] .navbar-custom,
+        body[data-theme="black-white"] .navbar-custom {
+            background-color: #f8f9fa !important;
+        }
+
+        body[data-theme="white-black"] .team-btn-active,
+        body[data-theme="black-white"] .team-btn-active {
+            background-color: #555 !important;
+            color: #eee !important;
+            border: 2px solid #000 !important;
+        }
+
+        body[data-theme="white-black"] .offcanvas .offcanvas-title,
+        body[data-theme="black-white"] .offcanvas .offcanvas-title {
+            color: #111;
+        }
+        body[data-theme="white-black"] footer h5,
+        body[data-theme="black-white"] footer h5 {
+            color: #fff !important;
+        }
+        body[data-theme="white-black"] footer,
+        body[data-theme="black-white"] footer {
+            background-color: #111;
+        }
+        body[data-theme="white-black"] footer a:hover,
+        body[data-theme="black-white"] footer a:hover {
+            color: #fff !important;
+        }
+        body[data-theme="white-black"] .team-btn-inactive:hover,
+        body[data-theme="black-white"] .team-btn-inactive:hover {
+            background-color: #ccc !important;
+            border-color: #111 !important;
+        }
+        body[data-theme="white-black"] .offcanvas .nav-link:hover,
+        body[data-theme="black-white"] .offcanvas .nav-link:hover {
+            background-color: #111;
+            color: #fff !important;
+        }
+
+        /* ---- Общие стили ---- */
+        .navbar-custom {
+            background-color: #fff !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .navbar-custom .navbar-brand,
+        .navbar-custom .nav-link {
+            color: #111 !important;
+        }
+        .navbar-custom .navbar-toggler-icon {
+            filter: invert(0);
+        }
+        .team-btn {
+            padding: 5px 100px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            height: 40px;
+            line-height: 1.2;
+        }
+        .team-btn-inactive {
+            background-color: #e0e0e0 !important;
+            color: #333 !important;
+            border: 2px solid #ccc;
+        }
+        .offcanvas {
+            background-color: #fff;
+            color: #111;
+            width: 280px;
+        }
+        .offcanvas .offcanvas-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        .offcanvas .nav-link {
+            font-size: 1.3rem;
+            padding: 12px 20px;
+            transition: 0.2s;
+        }
+        .offcanvas .nav-link:hover {
+            background-color: #FFD700;
+            color: #111 !important;
+            border-radius: 8px;
+            padding-left: 30px;
+        }
+        .offcanvas .btn-close {
+            filter: invert(0);
+        }
+        .navbar-logo {
+            height: 90px;
+            width: auto;
+            max-width: 250px;
+            object-fit: contain;
+        }
+        footer {
+            background-color: #111;
+            padding: 40px 0;
+            margin-top: 60px;
+            color: #aaa;
+        }
+        footer a {
+            color: #aaa;
+            text-decoration: none;
+        }
+
+        /* ---- Стили для темы и выпадающего меню ---- */
+        .theme-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .theme-btn-active:hover {
+            transform: scale(1.05);
+        }
+        .theme-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            margin-bottom: 8px;
+            transition: transform 0.1s;
+        }
+        .theme-option:last-child {
+            margin-bottom: 0;
+        }
+        .theme-option:hover {
+            transform: scale(1.05);
+        }
+        .theme-dropdown-menu {
+            background: white;
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+    </style>
+</head>
+<body>
+
+<!-- НАВИГАЦИЯ  -->
+<nav class="navbar navbar-custom fixed-top">
+    <div class="container-fluid">
+        <div class="row w-100 align-items-center" style="margin: 0; padding: 8px 20px;">
+            <div class="col-3 d-flex justify-content-start align-items-center">
+                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+            <div class="col-2 d-flex justify-content-end pe-5">
+                <button class="btn team-btn team-btn-active" type="button" id="btnFirstTeam">1 СОСТАВ</button>
+            </div>
+            <div class="col-2 d-flex justify-content-center align-items-center">
+                <a class="navbar-brand" href="/">
+                    <img src="/images/Logo.jpg" alt="Горизонт" class="navbar-logo" th:src="@{/images/Logo.jpg}" onerror="this.style.display='none'; this.parentElement.innerHTML='ГОРИЗОНТ'">
+                </a>
+            </div>
+            <div class="col-2 d-flex justify-content-start ps-5">
+                <button class="btn team-btn team-btn-inactive" type="button" id="btnSecondTeam">2 СОСТАВ</button>
+            </div>
+            <div class="col-3 d-flex justify-content-end align-items-center position-relative">
+                <div id="activeThemeBtn" class="theme-btn theme-btn-active" style="background: linear-gradient(135deg, #FFD700 50%, #111 50%);"></div>
+                <div id="themeDropdownMenu" class="theme-dropdown-menu" style="display: none; position: absolute; top: 100%; right: 0; margin-top: 8px; background: white; border-radius: 8px; padding: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); z-index: 1000;"></div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- ВЫДВИГАЮЩЕЕСЯ МЕНЮ -->
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title">МЕНЮ</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+        <ul class="navbar-nav">
+            <!-- ГЛАВНАЯ  -->
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/}">ГЛАВНАЯ</a>
+            </li>
+            <!-- СОСТАВ  -->
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/players(team=${currentTeam}, theme=${currentTheme})}">СОСТАВ</a>
+            </li>
+            <!-- СТАТИСТИКА  -->
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/stats(team=${currentTeam}, theme=${currentTheme})}">СТАТИСТИКА</a>
+            </li>
+            <!-- ИГРЫ  -->
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/videos(team=${currentTeam}, theme=${currentTheme})}">ИГРЫ</a>
+            </li>
+            <!-- НОВОСТИ  -->
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/posts(team=${currentTeam}, theme=${currentTheme})}">НОВОСТИ</a>
+            </li>
+            <!-- АДМИНКА  -->
+            <li sec:authorize="hasRole('ADMIN')" class="nav-item">
+                <a class="nav-link" href="/admin/dashboard">АДМИНКА</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!-- ОСНОВНОЙ КОНТЕНТ -->
+<div class="container">
+    <div th:replace="~{${content} :: content}"></div>
+</div>
+
+<!-- ФУТЕР -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h5>ГОРИЗОНТ</h5>
+                <p>Футзальная команда<br>Основана в 2007 году</p>
+                <p>Норильская улица, Иркутск</p>
+            </div>
+            <div class="col-md-4">
+                <h5>КОНТАКТЫ</h5>
+                <p>Dmitry Nazarenkin: +7 (914) 915-13-19</p>
+                <p>Евгений Жмуров: +7 (984) 270-58-40</p>
+            </div>
+            <div class="col-md-4">
+                <h5>ССЫЛКИ</h5>
+                <p>
+                    <a href="https://football-irkutsk.ru" target="_blank">Футбол-Иркутск</a>
+                </p>
+                <p>
+                    <a href="https://vk.com/mfc_horizont_irk" target="_blank">VK: @mfc_horizont_irk</a>
+                </p>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <small>2026 Футзальная команда ГОРИЗОНТ. Все права защищены.</small>
+        </div>
+    </div>
+</footer>
+
+<script src="/webjars/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    let btnFirst = document.getElementById('btnFirstTeam');
+    let btnSecond = document.getElementById('btnSecondTeam');
+    const activeThemeBtn = document.getElementById('activeThemeBtn');
+    const themeDropdownMenu = document.getElementById('themeDropdownMenu');
+    let themeMenuOpen = false;
+
+    const themes = {
+        'yellow-black': { gradient: 'linear-gradient(135deg, #FFD700 50%, #111 50%)' },
+        'white-black': { gradient: 'linear-gradient(135deg, #fff 50%, #111 50%)' },
+        'black-white': { gradient: 'linear-gradient(135deg, #111 50%, #fff 50%)' }
+    };
+
+    function updateActiveThemeButton(theme) {
+        if (themes[theme]) {
+            activeThemeBtn.style.background = themes[theme].gradient;
+            activeThemeBtn.setAttribute('data-theme', theme);
+        }
+    }
+
+    function buildDropdownMenu(currentTheme) {
+        const otherThemes = Object.keys(themes).filter(t => t !== currentTheme);
+        let html = '';
+        otherThemes.forEach(theme => {
+            html += `<div class="theme-option" data-theme="${theme}" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid #ccc; cursor: pointer; margin-bottom: 8px; background: ${themes[theme].gradient};"></div>`;
+        });
+        themeDropdownMenu.innerHTML = html;
+        document.querySelectorAll('.theme-option').forEach(option => {
+            option.addEventListener('click', function(e) {
+                e.stopPropagation();
+                let newTheme = this.getAttribute('data-theme');
+                if (newTheme) {
+                    let currentTeam = localStorage.getItem('selectedTeam') || 1;
+                    localStorage.setItem('siteTheme', newTheme);
+                    let url = window.location.pathname + '?team=' + currentTeam + '&theme=' + newTheme;
+                    saveScrollAndAccordionAndNavigate(url);
+                }
+                closeThemeMenu();
+            });
+        });
+    }
+
+    function closeThemeMenu() {
+        themeDropdownMenu.style.display = 'none';
+        themeMenuOpen = false;
+    }
+
+    function openThemeMenu() {
+        let currentTheme = localStorage.getItem('siteTheme') || 'yellow-black';
+        buildDropdownMenu(currentTheme);
+        themeDropdownMenu.style.display = 'flex';
+        themeDropdownMenu.style.flexDirection = 'column';
+        themeDropdownMenu.style.alignItems = 'center';
+        themeMenuOpen = true;
+    }
+
+    if (activeThemeBtn) {
+        activeThemeBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (themeMenuOpen) closeThemeMenu();
+            else openThemeMenu();
+        });
+    }
+
+    document.addEventListener('click', function(e) {
+        if (themeMenuOpen && themeDropdownMenu && !themeDropdownMenu.contains(e.target) && e.target !== activeThemeBtn) {
+            closeThemeMenu();
+        }
+    });
+
+    function applyTheme(theme) {
+        let displayTheme = (theme === 'black-white') ? 'white-black' : theme;
+        document.body.setAttribute('data-theme', displayTheme);
+        updateActiveThemeButton(theme);
+        localStorage.setItem('siteTheme', theme);
+        updateAllLinks();
+    }
+
+    function getCurrentThemeFromUrl() {
+        let urlParams = new URLSearchParams(window.location.search);
+        let theme = urlParams.get('theme');
+        if (theme && themes[theme]) return theme;
+        return null;
+    }
+
+    function getStoredTheme() {
+        return localStorage.getItem('siteTheme');
+    }
+
+    function updateTeamButtons(activeTeam) {
+        if (activeTeam === 1) {
+            btnFirst.classList.remove('team-btn-inactive');
+            btnFirst.classList.add('team-btn-active');
+            btnSecond.classList.remove('team-btn-active');
+            btnSecond.classList.add('team-btn-inactive');
+        } else {
+            btnSecond.classList.remove('team-btn-inactive');
+            btnSecond.classList.add('team-btn-active');
+            btnFirst.classList.remove('team-btn-active');
+            btnFirst.classList.add('team-btn-inactive');
+        }
+        localStorage.setItem('selectedTeam', activeTeam);
+    }
+
+    function updateAllLinks() {
+        let currentTeam = localStorage.getItem('selectedTeam') || 1;
+        let currentTheme = localStorage.getItem('siteTheme') || 'yellow-black';
+        let allLinks = document.querySelectorAll('a');
+        allLinks.forEach(function(link) {
+            let href = link.getAttribute('href');
+            if (href && !href.startsWith('#') && !href.startsWith('javascript:') && !href.startsWith('http') && !href.startsWith('/admin') && !href.startsWith('/uploads')) {
+                let baseHref = href.split('?')[0];
+                let params = new URLSearchParams();
+                params.set('team', currentTeam);
+                params.set('theme', currentTheme);
+                link.setAttribute('href', baseHref + '?' + params.toString());
+            }
+        });
+    }
+
+    function saveAccordionState() {
+        let openCollapses = document.querySelectorAll('.collapse.show');
+        let openIds = [];
+        openCollapses.forEach(function(collapse) {
+            if (collapse.id) openIds.push(collapse.id);
+        });
+        localStorage.setItem('openAccordions', JSON.stringify(openIds));
+    }
+
+    function restoreAccordionState() {
+        let openIdsJson = localStorage.getItem('openAccordions');
+        if (!openIdsJson) return;
+        let openIds = JSON.parse(openIdsJson);
+        openIds.forEach(function(id) {
+            let collapseEl = document.getElementById(id);
+            if (collapseEl && collapseEl.classList) {
+                if (typeof bootstrap !== 'undefined' && bootstrap.Collapse) {
+                    new bootstrap.Collapse(collapseEl, { toggle: false }).show();
+                } else {
+                    collapseEl.classList.add('show');
+                    collapseEl.setAttribute('aria-expanded', 'true');
+                    let parent = collapseEl.closest('.accordion-item');
+                    if (parent) {
+                        let button = parent.querySelector('.accordion-button');
+                        if (button) button.classList.remove('collapsed');
+                    }
+                }
+            }
+        });
+        localStorage.removeItem('openAccordions');
+    }
+
+    function saveScrollAndAccordionAndNavigate(url) {
+        localStorage.setItem('savedScrollY', window.scrollY);
+        saveAccordionState();
+        window.location.href = url;
+    }
+
+    function restoreState() {
+        restoreAccordionState();
+        let savedScroll = localStorage.getItem('savedScrollY');
+        if (savedScroll !== null) {
+            window.scrollTo(0, parseInt(savedScroll));
+            localStorage.removeItem('savedScrollY');
+        }
+    }
+
+    (function init() {
+        let theme = getCurrentThemeFromUrl();
+        if (!theme) theme = getStoredTheme();
+        if (!theme) theme = 'yellow-black';
+        applyTheme(theme);
+
+        let urlTeam = new URLSearchParams(window.location.search).get('team');
+        if (urlTeam) {
+            let team = parseInt(urlTeam);
+            updateTeamButtons(team);
+        } else {
+            let savedTeam = localStorage.getItem('selectedTeam');
+            if (savedTeam) {
+                let team = parseInt(savedTeam);
+                updateTeamButtons(team);
+                let newUrl = window.location.pathname + '?team=' + team + '&theme=' + theme;
+                window.history.replaceState({}, '', newUrl);
+            } else {
+                updateTeamButtons(1);
+            }
+        }
+        updateAllLinks();
+        restoreState();
+    })();
+
+    if (btnFirst) {
+        btnFirst.addEventListener('click', function() {
+            let currentTheme = localStorage.getItem('siteTheme') || 'yellow-black';
+            saveScrollAndAccordionAndNavigate(window.location.pathname + '?team=1&theme=' + currentTheme);
+        });
+    }
+    if (btnSecond) {
+        btnSecond.addEventListener('click', function() {
+            let currentTheme = localStorage.getItem('siteTheme') || 'yellow-black';
+            saveScrollAndAccordionAndNavigate(window.location.pathname + '?team=2&theme=' + currentTheme);
+        });
+    }
+
+    window.addEventListener('popstate', function() {
+        let newParams = new URLSearchParams(window.location.search);
+        let newTeam = newParams.get('team');
+        let newTheme = newParams.get('theme');
+        if (newTeam) updateTeamButtons(parseInt(newTeam));
+        if (newTheme) applyTheme(newTheme);
+        updateAllLinks();
+        restoreState();
+    });
+</script>
+
+</body>
+</html>

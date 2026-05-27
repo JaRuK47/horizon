@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="content">
+
+    <div class="card text-center mb-4 theme-card">
+        <div class="card-header theme-card-header">
+            <h1 th:text="|СТАТИСТИКА КОМАНДЫ - ${currentTeam} СОСТАВ|">СТАТИСТИКА КОМАНДЫ - 1 СОСТАВ</h1>
+        </div>
+    </div>
+
+    <div class="text-end mb-3">
+        <span class="badge theme-badge">
+            ВСЕГО ИГРОКОВ: <span th:text="${players.size()}">0</span>
+        </span>
+    </div>
+
+    <!-- Вратари -->
+    <div class="stats-table-header">
+        <div class="stats-grid-header">
+            <span></span>
+            <span>ВРАТАРЬ</span>
+            <span>ВОЗРАСТ</span>
+            <span>СЫГРАНО</span>
+            <span>ГОЛЫ</span>
+            <span>АССИСТЫ</span>
+            <span>ЖК</span>
+            <span>КК</span>
+        </div>
+    </div>
+    <div class="stats-rows">
+        <div th:each="player : ${players}" th:if="${player.position == 'Вратарь'}" class="stats-row">
+            <div class="stats-avatar">
+                <img th:src="${player.getPhotoByTheme(currentTheme)}" alt="Фото">
+            </div>
+            <span><strong th:text="${player.firstName + ' ' + player.lastName}">Имя Фамилия</strong></span>
+            <span th:text="${player.getAge()}">0</span>
+            <span th:text="${player.games}">0</span>
+            <span th:text="${player.goals}">0</span>
+            <span th:text="${player.assists}">0</span>
+            <span th:text="${player.yellowCards}">0</span>
+            <span th:text="${player.redCards}">0</span>
+        </div>
+    </div>
+
+    <!-- Полевые игроки -->
+    <div class="stats-table-header">
+        <div class="stats-grid-header">
+            <span></span>
+            <span>ПОЛЕВОЙ ИГРОК</span>
+            <span>ВОЗРАСТ</span>
+            <span>СЫГРАНО</span>
+            <span>ГОЛЫ</span>
+            <span>АССИСТЫ</span>
+            <span>ЖК</span>
+            <span>КК</span>
+        </div>
+    </div>
+    <div class="stats-rows">
+        <div th:each="player : ${players}" th:if="${player.position != 'Вратарь'}" class="stats-row">
+            <div class="stats-avatar">
+                <img th:src="${player.getPhotoByTheme(currentTheme)}" alt="Фото">
+            </div>
+            <span><strong th:text="${player.firstName + ' ' + player.lastName}">Имя Фамилия</strong></span>
+            <span th:text="${player.getAge()}">0</span>
+            <span th:text="${player.games}">0</span>
+            <span th:text="${player.goals}">0</span>
+            <span th:text="${player.assists}">0</span>
+            <span th:text="${player.yellowCards}">0</span>
+            <span th:text="${player.redCards}">0</span>
+        </div>
+    </div>
+
+    <style>
+        /* Общие стили */
+        .stats-table-header {
+            background-color: #111;
+            color: #FFD700;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        .stats-grid-header {
+            display: grid;
+            grid-template-columns: 0.5fr 1.5fr 1fr 1fr 1fr 1fr 1fr 1fr;
+            gap: 10px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .stats-grid-header span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .stats-row {
+            display: grid;
+            grid-template-columns: 0.5fr 1.5fr 1fr 1fr 1fr 1fr 1fr 1fr;
+            gap: 10px;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+            text-align: center;
+        }
+        .stats-avatar {
+            display: flex;
+            justify-content: center;
+        }
+        .stats-avatar img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .theme-card {
+            border: none;
+            background-color: #111;
+        }
+        .theme-card-header {
+            background-color: #FFD700;
+            color: #111;
+        }
+        .theme-badge {
+            background-color: #FFD700;
+            color: #111;
+            padding: 8px 15px;
+        }
+    </style>
+
+    <!-- Стили для чёрно-белой темы -->
+    <style th:if="${currentTheme == 'white-black' or currentTheme == 'black-white'}">
+        .stats-table-header {
+            background-color: #111;
+            color: #fff;
+        }
+        .theme-card-header {
+            background-color: #111;
+            color: #fff;
+        }
+        .theme-badge {
+            background-color: #111;
+            color: #fff;
+        }
+        .stats-row {
+            border-bottom-color: #ccc;
+        }
+    </style>
+
+</div>
+</body>
+</html>

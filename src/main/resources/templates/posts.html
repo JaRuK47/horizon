@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="content">
+
+    <div class="card text-center mb-4 theme-card">
+        <div class="card-header theme-card-header">
+            <h1>НОВОСТИ КОМАНДЫ</h1>
+        </div>
+    </div>
+
+    <div th:if="${newsPosts.isEmpty()}" class="alert alert-info text-center">
+        <h4>Новостей пока нет</h4>
+        <p>Следите за обновлениями!</p>
+    </div>
+
+    <!-- Аккордеон для новостей -->
+    <div class="accordion" id="newsAccordion">
+        <div th:each="post, stat : ${newsPosts}" class="accordion-item news-item">
+            <div class="accordion-header" th:id="'heading' + ${stat.index}">
+                <div class="accordion-button collapsed news-button"
+                     data-bs-toggle="collapse"
+                     th:data-bs-target="'#collapse' + ${stat.index}"
+                     aria-expanded="false"
+                     th:attr="aria-controls='collapse' + ${stat.index}">
+                    <div class="news-title-container">
+                        <div>
+                            <h2 th:text="${post.title}">Заголовок</h2>
+                            <small class="text-muted" th:text="${#temporals.format(post.createdDate, 'dd.MM.yyyy HH:mm')}">01.01.2024</small>
+                        </div>
+                        <span class="badge news-badge">Читать</span>
+                    </div>
+                </div>
+            </div>
+            <div th:id="'collapse' + ${stat.index}" class="accordion-collapse collapse"
+                 th:attr="aria-labelledby='heading' + ${stat.index}" data-bs-parent="#newsAccordion">
+                <div class="accordion-body news-body">
+                    <!-- Видео -->
+                    <div th:if="${post.videoUrl != null}" class="video-container text-center mb-3">
+                        <video controls>
+                            <source th:src="${post.videoUrl}" type="video/mp4">
+                            Ваш браузер не поддерживает видео.
+                        </video>
+                    </div>
+                    <!-- Изображение -->
+                    <div th:if="${post.imageUrl != null}" class="image-container text-center mb-3">
+                        <img th:src="${post.imageUrl}" alt="Фото">
+                    </div>
+                    <!-- Текст -->
+                    <div class="news-text">
+                        <span th:text="${post.content}">Текст новости</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Общие стили */
+        .news-item {
+            border: none;
+            margin-bottom: 15px;
+            background: transparent;
+        }
+        .news-button {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .news-title-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+        .news-title-container h2 {
+            margin: 0;
+            color: #111;
+        }
+        .news-badge {
+            background-color: #FFD700;
+            color: #111;
+        }
+        .accordion-button::after {
+            display: none;
+        }
+        .accordion-button:not(.collapsed) {
+            background-color: #fff;
+            box-shadow: none;
+        }
+        .accordion-button:focus {
+            box-shadow: none;
+            border-color: transparent;
+        }
+        .news-body {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            margin-top: 5px;
+            padding: 20px;
+        }
+        .video-container video {
+            max-width: 100%;
+            max-height: 400px;
+        }
+        .image-container img {
+            max-width: 100%;
+            max-height: 600px;
+            border-radius: 10px;
+            object-fit: contain;
+        }
+        .news-text {
+            white-space: pre-line;
+            line-height: 1.6;
+            color: #333;
+        }
+        .theme-card {
+            border: none;
+            background-color: #111;
+        }
+        .theme-card-header {
+            background-color: #FFD700;
+            color: #111;
+        }
+    </style>
+
+    <!-- Переопределение для бело-чёрной темы -->
+    <style th:if="${currentTheme == 'white-black' or currentTheme == 'black-white'}">
+        .news-badge {
+            background-color: #111;
+            color: #fff;
+        }
+        .theme-card-header {
+            background-color: #111;
+            color: #fff;
+        }
+        .news-body {
+            background-color: #e9ecef;
+        }
+        .news-text {
+            color: #111;
+        }
+        .news-title-container h2 {
+            color: #111;
+        }
+        .news-button {
+            background-color: #f8f9fa;
+        }
+    </style>
+
+</div>
+</body>
+</html>

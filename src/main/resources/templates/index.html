@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.thymeleaf.org ">
+<body>
+<div th:fragment="content">
+
+    <div th:each="post : ${historyPosts}" class="card mb-5"
+         style="border: none; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+
+        <div class="card-body" style="padding: 30px;">
+
+            <!-- Заголовок -->
+            <h1 style="color: #111; font-size: 2rem; margin: 0 0 20px 0; text-align: center;" th:text="${post.title}">
+                ГОРИЗОНТ</h1>
+
+            <!-- Видео -->
+            <div th:if="${post.videoUrl != null}" class="text-center mb-4">
+                <video controls style="max-width: 100%; max-height: 400px;">
+                    <source th:src="${post.videoUrl}" type="video/mp4">
+                    Ваш браузер не поддерживает видео.
+                </video>
+            </div>
+
+            <!-- Фото -->
+            <div th:if="${post.imageUrl != null and post.videoUrl == null}" class="text-center mb-4">
+                <img th:src="${post.imageUrl}" alt="Фото" style="max-width: 100%; max-height: 600px; width: auto; height: auto; border-radius: 10px; display: inline-block;">
+            </div>
+
+            <!-- Текст -->
+            <p style="white-space: pre-line; line-height: 1.6; color: #333; margin: 0;" th:text="${post.content}">Текст
+                истории</p>
+        </div>
+    </div>
+
+    <div th:unless="${!historyPosts.isEmpty()}" class="alert alert-info text-center">
+        <h4>История команды скоро появится</h4>
+    </div>
+
+</div>
+</body>
+</html>

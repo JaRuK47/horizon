@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="content">
+
+    <div class="card text-center mb-4 theme-card">
+        <div class="card-header theme-card-header">
+            <h1 th:text="|СОСТАВ КОМАНДЫ - ${currentTeam} СОСТАВ|">СОСТАВ КОМАНДЫ - 1 СОСТАВ</h1>
+        </div>
+    </div>
+
+    <div class="text-end mb-3">
+        <span class="badge theme-badge">
+            ВСЕГО ИГРОКОВ: <span th:text="${players.size()}">0</span>
+        </span>
+    </div>
+
+    <div class="table-header">
+        <div class="grid-header">
+            <div>ФОТО</div>
+            <div>ИГРОК</div>
+            <div>ДАТА РОЖДЕНИЯ (ВОЗРАСТ)</div>
+            <div>ИНФОРМАЦИЯ</div>
+        </div>
+    </div>
+
+    <div th:each="player, stat : ${players}" style="margin-bottom: 5px;">
+        <div class="player-header"
+             data-bs-toggle="collapse"
+             th:data-bs-target="'#collapse' + ${stat.index}"
+             aria-expanded="false">
+            <div class="player-avatar">
+                <img th:src="${player.getPhotoByTheme(currentTheme)}" alt="Фото">
+            </div>
+            <div><strong th:text="${player.firstName + ' ' + player.lastName}">Имя Фамилия</strong></div>
+            <div>
+                <span th:text="${player.birthDate != null ? player.birthDate : '-'}">01.01.2000</span>
+                <span th:if="${player.birthDate != null}"> (<span th:text="${player.getAge()}"></span> <span th:text="${player.getAgeWord()}"></span>)</span>
+            </div>
+            <div class="player-info-preview">
+                <span th:if="${player.content != null and player.content.length() > 100}" th:text="${player.content.substring(0, 100) + '...'}">Информация</span>
+                <span th:unless="${player.content != null and player.content.length() > 100}" th:text="${player.content != null ? player.content : 'Нажмите для просмотра подробной информации'}">Информация</span>
+            </div>
+        </div>
+
+        <div class="collapse" th:id="'collapse' + ${stat.index}">
+            <div class="player-detail">
+                <div class="detail-avatar">
+                    <img th:src="${player.getPhotoByTheme(currentTheme)}" alt="Фото">
+                </div>
+                <div>
+                    <h3 th:text="${player.firstName + ' ' + player.lastName}">Имя</h3>
+                    <p><strong>Дата рождения:</strong> <span th:text="${player.birthDate != null ? player.birthDate : '-'}">-</span> <span th:if="${player.birthDate != null}">(<span th:text="${player.getAge()}"></span> <span th:text="${player.getAgeWord()}"></span>)</span></p>
+                    <p><strong>Подробная информация:</strong></p>
+                    <p th:text="${player.content != null ? player.content : 'Нет дополнительной информации'}">Информация</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Общие стили */
+        .player-header {
+            display: grid;
+            grid-template-columns: 0.8fr 1.5fr 1.2fr 3fr;
+            gap: 10px;
+            padding: 12px;
+            background-color: #fff;
+            border-radius: 10px;
+            cursor: pointer;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: background-color 0.2s;
+        }
+        .player-header:hover {
+            background-color: #f5f5f5 !important;
+        }
+        .player-header[data-bs-toggle="collapse"]::after {
+            display: none;
+        }
+        .player-avatar img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .player-info-preview {
+            text-align: left;
+            color: #555;
+        }
+        .player-detail {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 5px;
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            align-items: flex-start;
+        }
+        .detail-avatar {
+            flex-shrink: 0;
+            margin-left: 20px;
+        }
+        .detail-avatar img {
+            width: 180px;
+            height: 180px;
+            border-radius: 15px;
+            object-fit: cover;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .grid-header {
+            display: grid;
+            grid-template-columns: 0.8fr 1.5fr 1.2fr 3fr;
+            gap: 10px;
+            text-align: center;
+        }
+        .table-header {
+            background-color: #111;
+            color: #FFD700;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        .grid-header > div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .theme-card {
+            border: none;
+            background-color: #111;
+        }
+        .theme-card-header {
+            background-color: #FFD700;
+            color: #111;
+        }
+        .theme-badge {
+            background-color: #FFD700;
+            color: #111;
+            padding: 8px 15px;
+        }
+    </style>
+
+    <!-- Стили для чёрно-белой темы -->
+    <style th:if="${currentTheme == 'white-black' or currentTheme == 'black-white'}">
+        .table-header {
+            background-color: #111;
+            color: #fff;
+        }
+        .theme-card-header {
+            background-color: #111;
+            color: #fff;
+        }
+        .theme-badge {
+            background-color: #111;
+            color: #fff;
+        }
+        .player-header {
+            background-color: #f8f9fa;
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let headers = document.querySelectorAll('[data-bs-toggle="collapse"]');
+            headers.forEach(function(header) {
+                header.classList.add('no-arrow');
+            });
+        });
+    </script>
+</div>
+</body>
+</html>
