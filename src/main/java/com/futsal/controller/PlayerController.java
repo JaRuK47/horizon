@@ -17,7 +17,6 @@ public class PlayerController {
     public String getPlayers(@RequestParam(defaultValue = "1") int team,
                              @RequestParam(defaultValue = "yellow-black") String theme,
                              Model model) {
-        System.out.println("ОТЛАДКА: PlayerController.getPlayers вызван с team=" + team + ", theme=" + theme);
         model.addAttribute("title", "Горизонт - состав команды");
         model.addAttribute("players", playerService.getPlayersByTeam(team));
         model.addAttribute("currentTeam", team);

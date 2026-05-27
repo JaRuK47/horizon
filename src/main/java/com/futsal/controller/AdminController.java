@@ -270,7 +270,12 @@ public class AdminController {
 
     @GetMapping("/posts/delete/{id}")
     public String deletePost(@PathVariable Long id) {
-        postService.deletePost(id);
+        Post post = postService.getPostById(id);
+        if (post != null) {
+            String category = post.getCategory();
+            postService.deletePost(id);
+            return "redirect:/admin/posts/" + category;
+        }
         return "redirect:/admin/posts/news";
     }
 
