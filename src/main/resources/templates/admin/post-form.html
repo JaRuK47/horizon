@@ -67,13 +67,6 @@
                 </div>
             </div>
 
-            <!-- Порядок отображения -->
-            <div th:if="${post.category == 'history'}" class="mb-3">
-                <label>Порядок отображения (число, чем меньше, тем выше)</label>
-                <input type="number" name="displayOrder" class="form-control" th:value="${post.displayOrder}" min="1">
-                <div class="form-text">Если не заполнить, будет добавлен в конец списка.</div>
-            </div>
-
             <button type="submit" class="btn btn-primary">Сохранить</button>
             <a th:href="@{/admin/posts/news}" class="btn btn-secondary">Отмена</a>
         </form>
