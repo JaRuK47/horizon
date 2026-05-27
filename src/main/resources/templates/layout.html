@@ -14,24 +14,6 @@
             transition: background-color 0.2s, color 0.2s;
         }
 
-
-        body {
-        font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-        }
-        h1, h2, h3, .navbar-brand {
-            letter-spacing: 1px;
-            font-weight: 700;
-        }
-        h1 {
-            font-size: 2.2rem;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
-        }
-        .offcanvas-title {
-            font-size: 2rem !important;
-            letter-spacing: 2px;
-        }
-
-
         body[data-theme="yellow-black"] {
             background-color: #f5f5f5;
             color: #111;
@@ -200,6 +182,24 @@
             padding: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
+
+
+        .team-btn {
+            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .team-btn-active {
+            transform: scale(1.02);
+            background-color: #FFD700 !important;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .team-btn-inactive {
+            filter: brightness(0.95);
+        }
+        .team-btn-inactive:hover {
+            transform: scale(0.98);
+            filter: brightness(1.05);
+        }
+
     </style>
 </head>
 <body>
